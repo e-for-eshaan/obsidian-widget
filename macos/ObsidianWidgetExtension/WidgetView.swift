@@ -24,33 +24,24 @@ struct ObsidianWidgetView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(displayTitle)
-                .font(.headline)
+                .font(WidgetFont.headline)
                 .lineLimit(family == .systemSmall ? 2 : 3)
                 .foregroundStyle(.primary)
 
             if entry.state.status == .loading {
                 ProgressView()
                     .controlSize(.small)
-                Text(entry.state.summary)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
+                WidgetMarkdownText(entry.state.summary, lineLimit: 2)
             } else if bullets.isEmpty {
-                Text(entry.state.summary)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(family == .systemSmall ? 3 : 6)
+                WidgetMarkdownText(entry.state.summary, font: WidgetFont.body(.subheadline), lineLimit: family == .systemSmall ? 3 : 6)
             } else {
                 VStack(alignment: .leading, spacing: 4) {
                     ForEach(Array(bullets.enumerated()), id: \.offset) { _, bullet in
                         HStack(alignment: .top, spacing: 6) {
                             Text("•")
-                                .font(.caption)
+                                .font(WidgetFont.body(.caption))
                                 .foregroundStyle(Color(red: 0.49, green: 0.45, blue: 1.0))
-                            Text(bullet)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(2)
+                            WidgetMarkdownText(bullet)
                         }
                     }
                 }
@@ -60,7 +51,7 @@ struct ObsidianWidgetView: View {
 
             if !entry.state.parentFolder.isEmpty {
                 Text(entry.state.parentFolder)
-                    .font(.caption2)
+                    .font(WidgetFont.body(.caption2))
                     .foregroundStyle(.tertiary)
                     .lineLimit(1)
             }
@@ -100,7 +91,7 @@ struct ObsidianWidgetView_Previews: PreviewProvider {
                     updatedAt: ISO8601DateFormatter().string(from: Date()),
                     status: .ready,
                     title: "Daily Notes",
-                    summary: "- Capture ideas quickly\n- Review weekly goals\n- Link related projects",
+                    summary: "- The **Singleton Pattern** ensures only one instance exists\n- **Pros:** controlled resource usage\n- **Cons:** hard to mock in tests",
                     filePath: "/tmp/note.md",
                     parentFolder: "Journal",
                     nextRefreshAt: ISO8601DateFormatter().string(from: Date().addingTimeInterval(3600)),
@@ -109,5 +100,47 @@ struct ObsidianWidgetView_Previews: PreviewProvider {
             )
         )
         .previewContext(WidgetPreviewContext(family: .systemMedium))
+    }
+}
+
+struct WidgetMarkdownText: View {
+    let markdown: String
+    var font: Font = WidgetFont.body(.caption)
+    var lineLimit: Int? = 2
+
+    init(_ markdown: String, font: Font = WidgetFont.body(.caption), lineLimit: Int? = 2) {
+        self.markdown = markdown
+        self.font = font
+        self.lineLimit = lineLimit
+    }
+
+    var body: some View {
+        Text(parsedMarkdown)
+            .font(font)
+            .foregroundStyle(.secondary)
+            .lineLimit(lineLimit)
+    }
+
+    private var parsedMarkdown: AttributedString {
+        if let parsed = try? AttributedString(
+            markdown: markdown,
+            options: AttributedString.MarkdownParsingOptions(
+                interpretedSyntax: .inlineOnlyPreservingWhitespace
+            )
+        ) {
+            return parsed
+        }
+
+        return AttributedString(markdown)
+    }
+}
+
+enum WidgetFont {
+    static var headline: Font {
+        .system(.headline, design: .monospaced).weight(.semibold)
+    }
+
+    static func body(_ style: Font.TextStyle) -> Font {
+        .system(style, design: .monospaced)
     }
 }

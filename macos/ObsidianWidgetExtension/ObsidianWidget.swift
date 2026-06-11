@@ -14,7 +14,7 @@ struct ObsidianWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: ObsidianWidgetProvider()) { entry in
             ObsidianWidgetView(entry: entry)
-                .widgetURL(SharedStateReader.obsidianURL(for: entry.state.filePath))
+                .widgetURL(URL(string: "obsidianwidget://open"))
         }
         .configurationDisplayName("Obsidian Note")
         .description("Shows the current random note summary from your vault.")

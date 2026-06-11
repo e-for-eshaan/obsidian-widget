@@ -4,27 +4,29 @@ import Security
 #endif
 
 enum AppGroup {
-    static let suffix = "com.obsidianwidget.shared"
-    static let legacyIdentifier = "group.com.obsidianwidget.shared"
+    static let groupSuffix = "group.com.obsidianwidget.shared"
     static let stateFileName = "widget-state.json"
 
-    static var identifier: String {
-        if let teamID = resolvedTeamID() {
-            return "\(teamID).\(suffix)"
-        }
-        return legacyIdentifier
-    }
-
     static var containerURL: URL? {
-        if let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier) {
-            return url
+        for candidate in containerIdentifierCandidates() {
+            if let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: candidate) {
+                return url
+            }
         }
 
-        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: legacyIdentifier)
+        return nil
     }
 
     static var stateFileURL: URL? {
         containerURL?.appendingPathComponent(stateFileName)
+    }
+
+    static func containerIdentifierCandidates() -> [String] {
+        if let teamID = resolvedTeamID() {
+            return ["\(teamID).\(groupSuffix)", groupSuffix]
+        }
+
+        return [groupSuffix]
     }
 
     private static func resolvedTeamID() -> String? {
