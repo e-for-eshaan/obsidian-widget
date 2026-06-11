@@ -1,4 +1,5 @@
 import Foundation
+import WidgetKit
 
 enum WidgetStateWriter {
     static func syncWidgetState(from note: NotePayload, fontSizePx: Int) {
@@ -30,14 +31,26 @@ enum WidgetStateWriter {
     }
 
     static func reloadNativeWidget() {
+        WidgetCenter.shared.reloadTimelines(ofKind: AppGroup.widgetKind)
+        spawnWidgetReloadHelper()
+    }
+
+    private static func spawnWidgetReloadHelper() {
         guard let helperPath = widgetReloadHelperPath() else { return }
 
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: helperPath)
-        process.standardOutput = FileHandle.nullDevice
-        process.standardError = FileHandle.nullDevice
+        DispatchQueue.global(qos: .utility).async {
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: helperPath)
+            process.standardOutput = FileHandle.nullDevice
+            process.standardError = FileHandle.nullDevice
 
-        try? process.run()
+            do {
+                try process.run()
+                process.waitUntilExit()
+            } catch {
+                return
+            }
+        }
     }
 
     private static func widgetReloadHelperPath() -> String? {
@@ -67,6 +80,17 @@ enum WidgetStateWriter {
 
         if FileManager.default.isExecutableFile(atPath: buildPath) {
             return buildPath
+        }
+
+        let debugBuildPath = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("build/Debug/WidgetReload")
+            .path
+
+        if FileManager.default.isExecutableFile(atPath: debugBuildPath) {
+            return debugBuildPath
         }
 
         return nil

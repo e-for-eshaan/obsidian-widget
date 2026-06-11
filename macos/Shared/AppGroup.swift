@@ -6,6 +6,7 @@ import Security
 enum AppGroup {
     static let groupSuffix = "group.com.obsidianwidget.shared"
     static let stateFileName = "widget-state.json"
+    static let widgetKind = "ObsidianWidget"
 
     static var containerURL: URL? {
         for candidate in containerIdentifierCandidates() {

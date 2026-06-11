@@ -27,10 +27,6 @@
 		AA0000100000000000000008 /* WidgetStateWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001170000000000000001 /* WidgetStateWriter.swift */; };
 		AA0000100000000000000009 /* NoteScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001180000000000000001 /* NoteScheduler.swift */; };
 		AA000010000000000000000A /* MarkdownTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001190000000000000001 /* MarkdownTextView.swift */; };
-		AA0000100000000000000013 /* ObsidianMarkdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001270000000000000001 /* ObsidianMarkdown.swift */; };
-		AA0000100000000000000014 /* ObsidianMarkdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001270000000000000001 /* ObsidianMarkdown.swift */; };
-		AA0000100000000000000015 /* SyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001280000000000000001 /* SyntaxHighlighter.swift */; };
-		AA0000100000000000000016 /* SyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001280000000000000001 /* SyntaxHighlighter.swift */; };
 		AA000010000000000000000B /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00011B0000000000000001 /* AppController.swift */; };
 		AA000010000000000000000C /* NoteNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00011C0000000000000001 /* NoteNavigation.swift */; };
 		AA000010000000000000000D /* NoteViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00011D0000000000000001 /* NoteViewerView.swift */; };
@@ -38,6 +34,10 @@
 		AA000010000000000000000F /* WidgetReload in Copy WidgetReload */ = {isa = PBXBuildFile; fileRef = AA0002030000000000000001 /* WidgetReload */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		AA0000100000000000000011 /* VaultAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001250000000000000001 /* VaultAccess.swift */; };
 		AA0000100000000000000012 /* ClaudeBinaryResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001260000000000000001 /* ClaudeBinaryResolver.swift */; };
+		AA0000100000000000000013 /* ObsidianMarkdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001270000000000000001 /* ObsidianMarkdown.swift */; };
+		AA0000100000000000000014 /* ObsidianMarkdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001270000000000000001 /* ObsidianMarkdown.swift */; };
+		AA0000100000000000000015 /* SyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001280000000000000001 /* SyntaxHighlighter.swift */; };
+		AA0000100000000000000016 /* SyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001280000000000000001 /* SyntaxHighlighter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,24 +91,6 @@
 		};
 /* End PBXCopyFilesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		AA000E010000000000000001 /* Register Widget Extension */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Register Widget Extension";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "find \"${CODESIGNING_FOLDER_PATH}\" -name '*.appex' -exec pluginkit -a {} \\;\npluginkit -e use -p com.apple.widgetkit-extension -i com.obsidianwidget.app.widget || true\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXFileReference section */
 		AA0001010000000000000001 /* ObsidianWidgetHostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObsidianWidgetHostApp.swift; sourceTree = "<group>"; };
 		AA0001020000000000000001 /* ObsidianWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObsidianWidget.swift; sourceTree = "<group>"; };
@@ -136,10 +118,6 @@
 		AA00011D0000000000000001 /* NoteViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteViewerView.swift; sourceTree = "<group>"; };
 		AA00011E0000000000000001 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AA00011F0000000000000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AA0001200000000000000001 /* Views */ = {isa = PBXGroup; children = (AA00011D0000000000000001 /* NoteViewerView.swift */, AA00011E0000000000000001 /* SettingsView.swift */); path = Views; sourceTree = "<group>"; };
-		AA0001210000000000000001 /* Models */ = {isa = PBXGroup; children = (AA0001100000000000000001 /* AppConfig.swift */, AA0001110000000000000001 /* NotePayload.swift */); path = Models; sourceTree = "<group>"; };
-		AA0001220000000000000001 /* Services */ = {isa = PBXGroup; children = (AA0001120000000000000001 /* ConfigStore.swift */, AA0001250000000000000001 /* VaultAccess.swift */, AA0001260000000000000001 /* ClaudeBinaryResolver.swift */, AA0001130000000000000001 /* VaultScanner.swift */, AA0001140000000000000001 /* RelatedNotesResolver.swift */, AA0001150000000000000001 /* SummaryFormat.swift */, AA0001160000000000000001 /* SummaryService.swift */, AA0001170000000000000001 /* WidgetStateWriter.swift */, AA0001180000000000000001 /* NoteScheduler.swift */); path = Services; sourceTree = "<group>"; };
-		AA0001230000000000000001 /* Views */ = {isa = PBXGroup; children = (AA0001190000000000000001 /* MarkdownTextView.swift */, AA0001270000000000000001 /* ObsidianMarkdown.swift */, AA0001280000000000000001 /* SyntaxHighlighter.swift */); path = Views; sourceTree = "<group>"; };
 		AA0001250000000000000001 /* VaultAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultAccess.swift; sourceTree = "<group>"; };
 		AA0001260000000000000001 /* ClaudeBinaryResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeBinaryResolver.swift; sourceTree = "<group>"; };
 		AA0001270000000000000001 /* ObsidianMarkdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObsidianMarkdown.swift; sourceTree = "<group>"; };
@@ -174,6 +152,50 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AA0001200000000000000001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA00011D0000000000000001 /* NoteViewerView.swift */,
+				AA00011E0000000000000001 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AA0001210000000000000001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AA0001100000000000000001 /* AppConfig.swift */,
+				AA0001110000000000000001 /* NotePayload.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AA0001220000000000000001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AA0001120000000000000001 /* ConfigStore.swift */,
+				AA0001250000000000000001 /* VaultAccess.swift */,
+				AA0001260000000000000001 /* ClaudeBinaryResolver.swift */,
+				AA0001130000000000000001 /* VaultScanner.swift */,
+				AA0001140000000000000001 /* RelatedNotesResolver.swift */,
+				AA0001150000000000000001 /* SummaryFormat.swift */,
+				AA0001160000000000000001 /* SummaryService.swift */,
+				AA0001170000000000000001 /* WidgetStateWriter.swift */,
+				AA0001180000000000000001 /* NoteScheduler.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		AA0001230000000000000001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA0001190000000000000001 /* MarkdownTextView.swift */,
+				AA0001270000000000000001 /* ObsidianMarkdown.swift */,
+				AA0001280000000000000001 /* SyntaxHighlighter.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		AA0008010000000000000001 = {
 			isa = PBXGroup;
 			children = (
@@ -308,7 +330,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					AA0005010000000000000001 = {
 						CreatedOnToolsVersion = 15.0;
@@ -357,6 +379,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		AA000E010000000000000001 /* Register Widget Extension */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Register Widget Extension";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "find \"${CODESIGNING_FOLDER_PATH}\" -name '*.appex' -exec pluginkit -a {} \\;\npluginkit -e use -p com.apple.widgetkit-extension -i com.obsidianwidget.app.widget || true\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AA000A010000000000000001 /* Sources */ = {
@@ -430,14 +470,45 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 4S3YY47BGX;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -448,11 +519,41 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 4S3YY47BGX;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -460,12 +561,13 @@
 		AA000D030000000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = ObsidianWidgetHost/ObsidianWidgetHost.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S3YY47BGX;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ObsidianWidgetHost/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Obsidian Widget";
@@ -478,6 +580,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.obsidianwidget.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -486,12 +589,13 @@
 		AA000D040000000000000001 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = ObsidianWidgetHost/ObsidianWidgetHost.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S3YY47BGX;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ObsidianWidgetHost/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Obsidian Widget";
@@ -504,6 +608,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.obsidianwidget.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -512,11 +617,12 @@
 		AA000D050000000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = ObsidianWidgetExtension/ObsidianWidgetExtension.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S3YY47BGX;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ObsidianWidgetExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -527,6 +633,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.obsidianwidget.app.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -536,11 +643,12 @@
 		AA000D060000000000000001 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = ObsidianWidgetExtension/ObsidianWidgetExtension.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S3YY47BGX;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ObsidianWidgetExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -551,6 +659,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.obsidianwidget.app.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -560,9 +669,10 @@
 		AA000D070000000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S3YY47BGX;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.obsidianwidget.widgetreload;
@@ -574,9 +684,10 @@
 		AA000D080000000000000001 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4S3YY47BGX;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.obsidianwidget.widgetreload;

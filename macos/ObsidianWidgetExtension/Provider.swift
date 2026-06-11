@@ -18,7 +18,7 @@ struct ObsidianWidgetProvider: TimelineProvider {
         case .ready:
             refreshDate = SharedStateReader.nextRefreshDate(from: state)
         case .loading:
-            refreshDate = Date().addingTimeInterval(5)
+            refreshDate = Date().addingTimeInterval(1)
         case .error, .needsSetup:
             refreshDate = Date().addingTimeInterval(60)
         }
