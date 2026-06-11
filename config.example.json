@@ -1,0 +1,11 @@
+{
+  "vaultFolderPath": "/Users/eshaanyadav/Library/Mobile Documents/iCloud~md~obsidian/Documents/Mind",
+  "includedSubfolders": [],
+  "refreshIntervalHours": 4,
+  "aspectRatio": "rectangle",
+  "leftPadding": 16,
+  "claudeBinary": "claude",
+  "summaryCacheDir": ".cache/summaries",
+  "lastPickAt": null,
+  "currentFilePath": null
+}

@@ -1,0 +1,200 @@
+.markdown {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  color: rgba(245, 245, 247, 0.9);
+  user-select: text;
+}
+
+.original {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  line-height: 1.55;
+}
+
+.summary {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  line-height: 1.55;
+}
+
+.error {
+  color: #ffb4b4;
+}
+
+.error :global(p),
+.error :global(li),
+.error :global(h1),
+.error :global(h2),
+.error :global(h3) {
+  color: #ffb4b4;
+}
+
+.markdown :global(p) {
+  margin: 0 0 0.75em;
+}
+
+.markdown :global(p:last-child) {
+  margin-bottom: 0;
+}
+
+.markdown :global(h1),
+.markdown :global(h2),
+.markdown :global(h3),
+.markdown :global(h4),
+.markdown :global(h5),
+.markdown :global(h6) {
+  margin: 0.85em 0 0.4em;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #f5f5f7;
+}
+
+.markdown :global(h1) {
+  font-size: 1.15em;
+}
+
+.markdown :global(h2) {
+  font-size: 1.08em;
+}
+
+.markdown :global(h3) {
+  font-size: 1.02em;
+}
+
+.markdown :global(ul),
+.markdown :global(ol) {
+  margin: 0 0 0.75em;
+  padding-left: 1.35em;
+  list-style-position: outside;
+}
+
+.markdown :global(ul) {
+  list-style-type: disc;
+}
+
+.markdown :global(ol) {
+  list-style-type: decimal;
+}
+
+.summary :global(ul) {
+  margin: 0;
+  padding-left: 1.1em;
+}
+
+.summary :global(ul li::marker) {
+  color: #9d91ff;
+}
+
+.markdown :global(li) {
+  margin: 0.2em 0;
+  padding-left: 0.15em;
+}
+
+.markdown :global(blockquote) {
+  margin: 0.75em 0;
+  padding-left: 0.75em;
+  border-left: 2px solid rgba(157, 145, 255, 0.55);
+  color: rgba(245, 245, 247, 0.72);
+}
+
+.inlineCode {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.88em;
+  padding: 0.12em 0.4em;
+  border-radius: 5px;
+  color: #ff9f5a;
+  background: rgba(255, 159, 90, 0.14);
+  border: 1px solid rgba(255, 159, 90, 0.28);
+  font-weight: 500;
+}
+
+.codeBlock {
+  position: relative;
+  margin: 0.75em 0;
+}
+
+.codeBlock :global(pre),
+.codeBlock :global(code) {
+  border: none;
+  background: transparent;
+  font-weight: inherit;
+}
+
+.codeBlock :global(pre) {
+  margin: 0;
+  overflow-x: auto;
+}
+
+.codeLang {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  z-index: 1;
+  font-size: 0.72em;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: rgba(183, 174, 255, 0.72);
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  pointer-events: none;
+}
+
+.markdown :global(a) {
+  color: #b8afff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.tag {
+  display: inline;
+  padding: 0.08em 0.42em;
+  border-radius: 999px;
+  color: #c4bbff;
+  background: rgba(157, 145, 255, 0.16);
+  border: 1px solid rgba(157, 145, 255, 0.32);
+  font-weight: 550;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.wikiLink {
+  display: inline;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #b8afff;
+  font: inherit;
+  font-weight: 550;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.wikiLink:hover {
+  text-decoration: underline;
+}
+
+.markdown :global(hr) {
+  margin: 0.85em 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.markdown :global(table) {
+  width: 100%;
+  margin: 0.75em 0;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+
+.markdown :global(th),
+.markdown :global(td) {
+  padding: 0.35em 0.5em;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.markdown :global(th) {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.markdown :global(input[type='checkbox']) {
+  margin-right: 0.35em;
+  accent-color: #9d91ff;
+}
