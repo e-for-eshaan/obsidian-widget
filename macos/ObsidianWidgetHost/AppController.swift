@@ -1,4 +1,5 @@
 import AppKit
+import Combine
 import SwiftUI
 
 @MainActor
@@ -12,12 +13,32 @@ final class AppController: ObservableObject {
     let scheduler: NoteScheduler
     let navigation: NoteNavigation
 
+    private var cancellables = Set<AnyCancellable>()
+
     init() {
         let configStore = ConfigStore()
         self.configStore = configStore
         self.scheduler = NoteScheduler(configStore: configStore)
         self.navigation = NoteNavigation()
         Self.shared = self
+
+        configStore.objectWillChange
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
+
+        scheduler.objectWillChange
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
+
+        navigation.objectWillChange
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
     }
 
     func bootstrapIfNeeded() {
@@ -102,6 +123,10 @@ final class AppController: ObservableObject {
 
     func updateSettings(_ partial: SettingsUpdate) {
         _ = configStore.update(partial)
+
+        if partial.fontSizePx != nil, let note = scheduler.currentNote {
+            WidgetStateWriter.syncWidgetState(from: note, fontSizePx: configStore.config.fontSizePx)
+        }
     }
 
     func toggleSubfolder(_ folder: String) {

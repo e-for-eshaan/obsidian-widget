@@ -16,6 +16,7 @@ struct WidgetSharedState: Codable {
     let filePath: String
     let parentFolder: String
     let nextRefreshAt: String
+    let fontSizePx: Int
     let errorMessage: String?
 
     static let placeholder = WidgetSharedState(
@@ -27,8 +28,47 @@ struct WidgetSharedState: Codable {
         filePath: "",
         parentFolder: "",
         nextRefreshAt: ISO8601DateFormatter().string(from: Date()),
+        fontSizePx: 11,
         errorMessage: nil
     )
+
+    init(
+        version: Int,
+        updatedAt: String,
+        status: WidgetStatus,
+        title: String,
+        summary: String,
+        filePath: String,
+        parentFolder: String,
+        nextRefreshAt: String,
+        fontSizePx: Int = 11,
+        errorMessage: String?
+    ) {
+        self.version = version
+        self.updatedAt = updatedAt
+        self.status = status
+        self.title = title
+        self.summary = summary
+        self.filePath = filePath
+        self.parentFolder = parentFolder
+        self.nextRefreshAt = nextRefreshAt
+        self.fontSizePx = fontSizePx
+        self.errorMessage = errorMessage
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        version = try container.decode(Int.self, forKey: .version)
+        updatedAt = try container.decode(String.self, forKey: .updatedAt)
+        status = try container.decode(WidgetStatus.self, forKey: .status)
+        title = try container.decode(String.self, forKey: .title)
+        summary = try container.decode(String.self, forKey: .summary)
+        filePath = try container.decode(String.self, forKey: .filePath)
+        parentFolder = try container.decode(String.self, forKey: .parentFolder)
+        nextRefreshAt = try container.decode(String.self, forKey: .nextRefreshAt)
+        fontSizePx = try container.decodeIfPresent(Int.self, forKey: .fontSizePx) ?? 11
+        errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage)
+    }
 }
 
 enum SharedStateReader {
@@ -52,6 +92,7 @@ enum SharedStateReader {
                 filePath: "",
                 parentFolder: "",
                 nextRefreshAt: ISO8601DateFormatter().string(from: Date()),
+                fontSizePx: 11,
                 errorMessage: error.localizedDescription
             )
         }

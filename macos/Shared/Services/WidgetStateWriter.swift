@@ -1,8 +1,8 @@
 import Foundation
 
 enum WidgetStateWriter {
-    static func syncWidgetState(from note: NotePayload) {
-        writeWidgetState(WidgetSharedState.from(note: note))
+    static func syncWidgetState(from note: NotePayload, fontSizePx: Int) {
+        writeWidgetState(WidgetSharedState.from(note: note, fontSizePx: fontSizePx))
         reloadNativeWidget()
     }
 

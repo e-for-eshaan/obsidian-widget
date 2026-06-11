@@ -12,11 +12,8 @@ struct ObsidianWidgetHostApp: App {
 
         WindowGroup("Obsidian Widget", id: "main") {
             ZStack {
-                NoteViewerView(
-                    scheduler: appController.scheduler,
-                    navigation: appController.navigation
-                )
-                .environmentObject(appController)
+                NoteViewerView()
+                    .environmentObject(appController)
 
                 MainWindowBridge(appController: appController)
             }

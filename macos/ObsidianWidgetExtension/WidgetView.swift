@@ -6,6 +6,10 @@ struct ObsidianWidgetView: View {
 
     let entry: ObsidianWidgetEntry
 
+    private var fontSizePx: Int {
+        entry.state.fontSizePx
+    }
+
     private var bulletLimit: Int {
         switch family {
         case .systemSmall:
@@ -31,17 +35,21 @@ struct ObsidianWidgetView: View {
             if entry.state.status == .loading {
                 ProgressView()
                     .controlSize(.small)
-                WidgetMarkdownText(entry.state.summary, lineLimit: 2)
+                WidgetMarkdownText(entry.state.summary, fontSizePx: fontSizePx, lineLimit: 2)
             } else if bullets.isEmpty {
-                WidgetMarkdownText(entry.state.summary, font: WidgetFont.body(.subheadline), lineLimit: family == .systemSmall ? 3 : 6)
+                WidgetMarkdownText(
+                    entry.state.summary,
+                    fontSizePx: fontSizePx,
+                    lineLimit: family == .systemSmall ? 3 : 6
+                )
             } else {
                 VStack(alignment: .leading, spacing: 4) {
                     ForEach(Array(bullets.enumerated()), id: \.offset) { _, bullet in
                         HStack(alignment: .top, spacing: 6) {
                             Text("•")
-                                .font(WidgetFont.body(.caption))
+                                .font(WidgetFont.body(fontSizePx - 2))
                                 .foregroundStyle(Color(red: 0.49, green: 0.45, blue: 1.0))
-                            WidgetMarkdownText(bullet)
+                            WidgetMarkdownText(bullet, fontSizePx: fontSizePx)
                         }
                     }
                 }
@@ -95,52 +103,11 @@ struct ObsidianWidgetView_Previews: PreviewProvider {
                     filePath: "/tmp/note.md",
                     parentFolder: "Journal",
                     nextRefreshAt: ISO8601DateFormatter().string(from: Date().addingTimeInterval(3600)),
+                    fontSizePx: 11,
                     errorMessage: nil
                 )
             )
         )
         .previewContext(WidgetPreviewContext(family: .systemMedium))
-    }
-}
-
-struct WidgetMarkdownText: View {
-    let markdown: String
-    var font: Font = WidgetFont.body(.caption)
-    var lineLimit: Int? = 2
-
-    init(_ markdown: String, font: Font = WidgetFont.body(.caption), lineLimit: Int? = 2) {
-        self.markdown = markdown
-        self.font = font
-        self.lineLimit = lineLimit
-    }
-
-    var body: some View {
-        Text(parsedMarkdown)
-            .font(font)
-            .foregroundStyle(.secondary)
-            .lineLimit(lineLimit)
-    }
-
-    private var parsedMarkdown: AttributedString {
-        if let parsed = try? AttributedString(
-            markdown: markdown,
-            options: AttributedString.MarkdownParsingOptions(
-                interpretedSyntax: .inlineOnlyPreservingWhitespace
-            )
-        ) {
-            return parsed
-        }
-
-        return AttributedString(markdown)
-    }
-}
-
-enum WidgetFont {
-    static var headline: Font {
-        .system(.headline, design: .monospaced).weight(.semibold)
-    }
-
-    static func body(_ style: Font.TextStyle) -> Font {
-        .system(style, design: .monospaced)
     }
 }

@@ -30,6 +30,13 @@ enum SummaryService {
 
         let rawResponse = try await runClaude(config: config, prompt: buildPrompt(title: title, content: content))
         let result = parseSummaryResponse(rawResponse)
+
+        guard !isUnparseableSummary(result.summary) else {
+            throw SummaryServiceError.cliFailed(
+                "Summary could not be parsed from Claude response. Use Regenerate summary in settings."
+            )
+        }
+
         writeCachedSummary(
             cacheDir: cacheDir,
             cacheKey: cacheKey,
@@ -66,6 +73,7 @@ enum SummaryService {
               let data = try? Data(contentsOf: cachePath),
               let parsed = try? JSONDecoder().decode(CachedNoteSummary.self, from: data),
               !parsed.summary.isEmpty,
+              !isUnparseableSummary(parsed.summary),
               parsed.contentHash == contentHash else {
             return nil
         }
@@ -98,6 +106,10 @@ enum SummaryService {
         return trimmed.hasPrefix("{") || trimmed.contains("\"summary\":") || trimmed.contains("\"relatedNotes\":")
     }
 
+    private static func isUnparseableSummary(_ summary: String) -> Bool {
+        summary == "Summary could not be parsed. Use Regenerate summary in settings."
+    }
+
     private static func parseSummaryResponse(_ raw: String) -> NoteSummaryResult {
         var candidates = Set<String>()
         candidates.insert(extractJsonPayload(raw))
@@ -112,7 +124,7 @@ enum SummaryService {
             }
         }
 
-        let stripped = raw.replacingOccurrences(of: "\\{[\\s\\S]*\\}", with: "", options: .regularExpression)
+        let stripped = raw.replacingOccurrences(of: #"\{[\s\S]*\}"#, with: "", options: .regularExpression)
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
         if !stripped.isEmpty {
@@ -129,17 +141,42 @@ enum SummaryService {
     }
 
     private static func tryParseSummaryJson(_ jsonText: String) -> NoteSummaryResult? {
-        guard let data = jsonText.data(using: .utf8),
-              let parsed = try? JSONDecoder().decode(PartialSummaryResponse.self, from: data),
-              let summary = parsed.summary?.trimmingCharacters(in: .whitespacesAndNewlines),
-              !summary.isEmpty else {
+        let trimmed = jsonText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let data = trimmed.data(using: .utf8) else { return nil }
+
+        if let parsed = try? JSONDecoder().decode(PartialSummaryResponse.self, from: data),
+           let summary = parsed.summary?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !summary.isEmpty {
+            return NoteSummaryResult(
+                summary: SummaryFormat.formatSummaryBullets(summary),
+                relatedNotes: normalizeRelatedNotes(parsed.relatedNotes)
+            )
+        }
+
+        guard let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let summaryValue = object["summary"] as? String else {
             return nil
         }
 
+        let summary = summaryValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !summary.isEmpty else { return nil }
+
+        let relatedNotes = normalizeRelatedNotesFromAny(object["relatedNotes"])
         return NoteSummaryResult(
             summary: SummaryFormat.formatSummaryBullets(summary),
-            relatedNotes: normalizeRelatedNotes(parsed.relatedNotes)
+            relatedNotes: relatedNotes
         )
+    }
+
+    private static func normalizeRelatedNotesFromAny(_ value: Any?) -> [LlmRelatedNote] {
+        guard let entries = value as? [[String: Any]] else { return [] }
+        return entries.compactMap { entry in
+            guard let title = entry["title"] as? String else { return nil }
+            let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty ? nil : LlmRelatedNote(title: trimmed)
+        }
+        .prefix(maxLlmRelatedNotes)
+        .map { $0 }
     }
 
     private struct PartialSummaryResponse: Decodable {
@@ -207,6 +244,32 @@ enum SummaryService {
         return nil
     }
 
+    private struct ClaudeCliResponse: Decodable {
+        let is_error: Bool?
+        let result: String?
+    }
+
+    private static func extractClaudeStdout(_ stdout: String) throws -> String {
+        let trimmed = stdout.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let data = trimmed.data(using: .utf8),
+              let wrapper = try? JSONDecoder().decode(ClaudeCliResponse.self, from: data) else {
+            return trimmed
+        }
+
+        if wrapper.is_error == true {
+            let message = wrapper.result?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            throw SummaryServiceError.cliFailed(
+                message.isEmpty ? "Claude CLI returned an error response." : message
+            )
+        }
+
+        if let result = wrapper.result?.trimmingCharacters(in: .whitespacesAndNewlines), !result.isEmpty {
+            return result
+        }
+
+        return trimmed
+    }
+
     private static func runClaude(config: AppConfig, prompt: String) async throws -> String {
         guard let executableURL = ClaudeBinaryResolver.resolve(configuredBinary: config.claudeBinary) else {
             throw SummaryServiceError.cliFailed(
@@ -223,7 +286,7 @@ enum SummaryService {
                 "--permission-mode",
                 "dontAsk",
                 "--output-format",
-                "text",
+                "json",
             ]
 
             process.environment = ClaudeBinaryResolver.augmentedEnvironment()
@@ -262,7 +325,12 @@ enum SummaryService {
                     return
                 }
 
-                continuation.resume(returning: stdout)
+                do {
+                    let payload = try extractClaudeStdout(stdout)
+                    continuation.resume(returning: payload)
+                } catch {
+                    continuation.resume(throwing: error)
+                }
             }
 
             do {

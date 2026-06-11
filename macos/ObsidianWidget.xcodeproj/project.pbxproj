@@ -27,6 +27,10 @@
 		AA0000100000000000000008 /* WidgetStateWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001170000000000000001 /* WidgetStateWriter.swift */; };
 		AA0000100000000000000009 /* NoteScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001180000000000000001 /* NoteScheduler.swift */; };
 		AA000010000000000000000A /* MarkdownTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001190000000000000001 /* MarkdownTextView.swift */; };
+		AA0000100000000000000013 /* ObsidianMarkdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001270000000000000001 /* ObsidianMarkdown.swift */; };
+		AA0000100000000000000014 /* ObsidianMarkdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001270000000000000001 /* ObsidianMarkdown.swift */; };
+		AA0000100000000000000015 /* SyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001280000000000000001 /* SyntaxHighlighter.swift */; };
+		AA0000100000000000000016 /* SyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001280000000000000001 /* SyntaxHighlighter.swift */; };
 		AA000010000000000000000B /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00011B0000000000000001 /* AppController.swift */; };
 		AA000010000000000000000C /* NoteNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00011C0000000000000001 /* NoteNavigation.swift */; };
 		AA000010000000000000000D /* NoteViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00011D0000000000000001 /* NoteViewerView.swift */; };
@@ -135,9 +139,11 @@
 		AA0001200000000000000001 /* Views */ = {isa = PBXGroup; children = (AA00011D0000000000000001 /* NoteViewerView.swift */, AA00011E0000000000000001 /* SettingsView.swift */); path = Views; sourceTree = "<group>"; };
 		AA0001210000000000000001 /* Models */ = {isa = PBXGroup; children = (AA0001100000000000000001 /* AppConfig.swift */, AA0001110000000000000001 /* NotePayload.swift */); path = Models; sourceTree = "<group>"; };
 		AA0001220000000000000001 /* Services */ = {isa = PBXGroup; children = (AA0001120000000000000001 /* ConfigStore.swift */, AA0001250000000000000001 /* VaultAccess.swift */, AA0001260000000000000001 /* ClaudeBinaryResolver.swift */, AA0001130000000000000001 /* VaultScanner.swift */, AA0001140000000000000001 /* RelatedNotesResolver.swift */, AA0001150000000000000001 /* SummaryFormat.swift */, AA0001160000000000000001 /* SummaryService.swift */, AA0001170000000000000001 /* WidgetStateWriter.swift */, AA0001180000000000000001 /* NoteScheduler.swift */); path = Services; sourceTree = "<group>"; };
-		AA0001230000000000000001 /* Views */ = {isa = PBXGroup; children = (AA0001190000000000000001 /* MarkdownTextView.swift */); path = Views; sourceTree = "<group>"; };
+		AA0001230000000000000001 /* Views */ = {isa = PBXGroup; children = (AA0001190000000000000001 /* MarkdownTextView.swift */, AA0001270000000000000001 /* ObsidianMarkdown.swift */, AA0001280000000000000001 /* SyntaxHighlighter.swift */); path = Views; sourceTree = "<group>"; };
 		AA0001250000000000000001 /* VaultAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultAccess.swift; sourceTree = "<group>"; };
 		AA0001260000000000000001 /* ClaudeBinaryResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeBinaryResolver.swift; sourceTree = "<group>"; };
+		AA0001270000000000000001 /* ObsidianMarkdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObsidianMarkdown.swift; sourceTree = "<group>"; };
+		AA0001280000000000000001 /* SyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntaxHighlighter.swift; sourceTree = "<group>"; };
 		AA0002010000000000000001 /* ObsidianWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ObsidianWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA0002020000000000000001 /* ObsidianWidgetHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObsidianWidgetHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA0002030000000000000001 /* WidgetReload */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WidgetReload; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -363,6 +369,8 @@
 				AA0000050000000000000001 /* WidgetView.swift in Sources */,
 				AA0000060000000000000001 /* SharedState.swift in Sources */,
 				AA0000070000000000000001 /* AppGroup.swift in Sources */,
+				AA0000100000000000000014 /* ObsidianMarkdown.swift in Sources */,
+				AA0000100000000000000016 /* SyntaxHighlighter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,6 +390,8 @@
 				AA0000100000000000000008 /* WidgetStateWriter.swift in Sources */,
 				AA0000100000000000000009 /* NoteScheduler.swift in Sources */,
 				AA000010000000000000000A /* MarkdownTextView.swift in Sources */,
+				AA0000100000000000000013 /* ObsidianMarkdown.swift in Sources */,
+				AA0000100000000000000015 /* SyntaxHighlighter.swift in Sources */,
 				AA000010000000000000000B /* AppController.swift in Sources */,
 				AA000010000000000000000C /* NoteNavigation.swift in Sources */,
 				AA000010000000000000000D /* NoteViewerView.swift in Sources */,

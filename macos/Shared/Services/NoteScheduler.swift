@@ -16,7 +16,7 @@ final class NoteScheduler: ObservableObject {
 
     func start() {
         _ = VaultAccess.beginAccess(configVaultPath: configStore.config.vaultFolderPath)
-        Task {
+        Task { @MainActor in
             await refresh(forceNewPick: false, bypassCache: false)
             scheduleNext()
         }
@@ -79,7 +79,7 @@ final class NoteScheduler: ObservableObject {
 
     private func runRefresh(forceNewPick: Bool, bypassCache: Bool) {
         refreshTask?.cancel()
-        refreshTask = Task {
+        refreshTask = Task { @MainActor in
             await refresh(forceNewPick: forceNewPick, bypassCache: bypassCache)
             scheduleNext()
         }
@@ -87,7 +87,7 @@ final class NoteScheduler: ObservableObject {
 
     private func runLoadNote(at filePath: String, bypassCache: Bool, updateLastPick: Bool) {
         refreshTask?.cancel()
-        refreshTask = Task {
+        refreshTask = Task { @MainActor in
             isRefreshing = true
             defer { isRefreshing = false }
 
@@ -133,11 +133,6 @@ final class NoteScheduler: ObservableObject {
 
         do {
             let shouldPickNew = forceNewPick || isRefreshDue(config)
-            let markdownFiles = VaultScanner.listMarkdownFiles(
-                vaultPath: vaultPath,
-                includedSubfolders: config.includedSubfolders
-            )
-
             let filePath: String?
 
             if shouldPickNew {
@@ -275,7 +270,7 @@ final class NoteScheduler: ObservableObject {
 
     private func publish(_ note: NotePayload) {
         currentNote = note
-        WidgetStateWriter.syncWidgetState(from: note)
+        WidgetStateWriter.syncWidgetState(from: note, fontSizePx: configStore.config.fontSizePx)
     }
 
     private func publishLoadingState() {

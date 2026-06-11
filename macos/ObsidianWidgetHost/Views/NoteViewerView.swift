@@ -2,37 +2,17 @@ import SwiftUI
 
 struct NoteViewerView: View {
     @EnvironmentObject private var appController: AppController
-    @ObservedObject private var scheduler: NoteScheduler
-    @ObservedObject private var navigation: NoteNavigation
 
-    init(scheduler: NoteScheduler, navigation: NoteNavigation) {
-        self.scheduler = scheduler
-        self.navigation = navigation
-    }
-
-    private var note: NotePayload {
-        scheduler.currentNote ?? NotePayload(
-            title: "Obsidian Widget",
-            summary: "Loading your note…",
-            content: "",
-            relativePath: "",
-            filePath: "",
-            parentFolder: "",
-            relatedNotes: [],
-            nextRefreshAt: Date().ISO8601Format(),
-            status: .loading
-        )
-    }
-
-    private var settings: WidgetSettings {
-        appController.configStore.settings
-    }
+    private var scheduler: NoteScheduler { appController.scheduler }
+    private var navigation: NoteNavigation { appController.navigation }
 
     var body: some View {
+        let note = scheduler.currentNote ?? Self.placeholderNote
+
         VStack(spacing: 0) {
-            toolbar
+            toolbar(for: note)
             Divider()
-            noteSection
+            noteSection(for: note)
         }
         .frame(minWidth: 520, minHeight: 560)
         .onChange(of: note.filePath) { _, newPath in
@@ -46,13 +26,13 @@ struct NoteViewerView: View {
         }
     }
 
-    private var toolbar: some View {
+    private func toolbar(for note: NotePayload) -> some View {
         HStack(spacing: 8) {
             Spacer()
 
             Button {
                 navigation.clearHistory()
-                appController.scheduler.forceRefreshNow()
+                scheduler.forceRefreshNow()
             } label: {
                 Image(systemName: "arrow.clockwise")
             }
@@ -80,23 +60,23 @@ struct NoteViewerView: View {
         .padding(.vertical, 10)
     }
 
-    private var noteSection: some View {
+    private func noteSection(for note: NotePayload) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                navRow
+                navRow(for: note)
 
                 if appController.settingsOpen {
                     SettingsView(
-                        settings: settings,
+                        settings: appController.configStore.settings,
                         canRegenerateSummary: !note.filePath.isEmpty && note.status != .loading,
                         onChooseFolder: { appController.chooseVaultFolder() },
                         onToggleSubfolder: { appController.toggleSubfolder($0) },
                         onFontSizeChange: { appController.updateSettings(SettingsUpdate(fontSizePx: $0)) },
                         onRefreshNow: {
                             navigation.clearHistory()
-                            appController.scheduler.refreshNow()
+                            scheduler.refreshNow()
                         },
-                        onRegenerateSummary: { appController.scheduler.regenerateSummary() },
+                        onRegenerateSummary: { scheduler.regenerateSummary() },
                         onClose: { appController.settingsOpen = false }
                     )
                 }
@@ -105,27 +85,27 @@ struct NoteViewerView: View {
                     .font(.system(size: 22, weight: .semibold, design: .monospaced))
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                contentBody
+                contentBody(for: note)
 
-                footer
+                footer(for: note)
             }
             .padding(20)
         }
     }
 
-    private var navRow: some View {
+    private func navRow(for note: NotePayload) -> some View {
         HStack(spacing: 12) {
             if navigation.canGoBack {
                 HStack(spacing: 4) {
                     Button {
-                        navigation.goBack { appController.scheduler.loadNote($0) }
+                        navigation.goBack { scheduler.loadNote($0) }
                     } label: {
                         Image(systemName: "chevron.left")
                     }
                     .help("Back to previous note")
 
                     Button("Top") {
-                        navigation.goBackToTop { appController.scheduler.loadNote($0) }
+                        navigation.goBackToTop { scheduler.loadNote($0) }
                     }
                     .font(.caption)
                     .help("Back to top")
@@ -145,13 +125,14 @@ struct NoteViewerView: View {
 
     private var contentViewBinding: Binding<ContentView> {
         Binding(
-            get: { settings.contentView },
+            get: { appController.configStore.settings.contentView },
             set: { appController.updateSettings(SettingsUpdate(contentView: $0)) }
         )
     }
 
     @ViewBuilder
-    private var contentBody: some View {
+    private func contentBody(for note: NotePayload) -> some View {
+        let settings = appController.configStore.settings
         let isLoading = note.status == .loading
         let hasOriginal = !note.content.isEmpty
         let showOriginal = settings.contentView == .original && hasOriginal
@@ -162,16 +143,17 @@ struct NoteViewerView: View {
                 content: note.content,
                 fontSize: CGFloat(settings.fontSizePx),
                 onWikiLinkTap: { target in
-                    handleWikiLink(target)
+                    handleWikiLink(target, currentFilePath: note.filePath)
                 }
             )
         } else if showSummaryLoader {
             HStack(spacing: 8) {
                 ProgressView()
                     .controlSize(.small)
-                Text(note.summary)
-                    .font(.system(size: CGFloat(settings.fontSizePx), design: .monospaced))
-                    .foregroundStyle(.secondary)
+                MarkdownTextView(
+                    content: note.summary,
+                    fontSize: CGFloat(settings.fontSizePx)
+                )
             }
         } else {
             MarkdownTextView(
@@ -179,17 +161,17 @@ struct NoteViewerView: View {
                 fontSize: CGFloat(settings.fontSizePx),
                 isError: note.status == .error,
                 onWikiLinkTap: { target in
-                    handleWikiLink(target)
+                    handleWikiLink(target, currentFilePath: note.filePath)
                 }
             )
 
             if note.status == .ready {
-                relatedNotesSection
+                relatedNotesSection(for: note)
             }
         }
     }
 
-    private var relatedNotesSection: some View {
+    private func relatedNotesSection(for note: NotePayload) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             if !note.parentFolder.isEmpty {
                 Text(note.parentFolder)
@@ -208,7 +190,7 @@ struct NoteViewerView: View {
                             navigation.navigateToRelated(
                                 from: note.filePath,
                                 to: related.filePath
-                            ) { appController.scheduler.loadNote($0) }
+                            ) { scheduler.loadNote($0) }
                         }
                         .buttonStyle(.bordered)
                         .controlSize(.small)
@@ -218,7 +200,7 @@ struct NoteViewerView: View {
         }
     }
 
-    private var footer: some View {
+    private func footer(for note: NotePayload) -> some View {
         Group {
             if note.status != .loading || !note.content.isEmpty {
                 Text(formatRefreshLabel(note.nextRefreshAt))
@@ -229,13 +211,13 @@ struct NoteViewerView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private func handleWikiLink(_ target: String) {
-        guard let filePath = appController.scheduler.resolveWikiLink(target),
-              filePath != note.filePath else {
+    private func handleWikiLink(_ target: String, currentFilePath: String) {
+        guard let filePath = scheduler.resolveWikiLink(target),
+              filePath != currentFilePath else {
             return
         }
 
-        navigation.navigateToRelated(from: note.filePath, to: filePath) { appController.scheduler.loadNote($0) }
+        navigation.navigateToRelated(from: currentFilePath, to: filePath) { scheduler.loadNote($0) }
     }
 
     private func formatRefreshLabel(_ nextRefreshAt: String) -> String {
@@ -257,6 +239,18 @@ struct NoteViewerView: View {
 
         return "Refreshes in \(minutes)m"
     }
+
+    private static let placeholderNote = NotePayload(
+        title: "Obsidian Widget",
+        summary: "Loading your note…",
+        content: "",
+        relativePath: "",
+        filePath: "",
+        parentFolder: "",
+        relatedNotes: [],
+        nextRefreshAt: Date().ISO8601Format(),
+        status: .loading
+    )
 }
 
 struct FlowLayout: Layout {
