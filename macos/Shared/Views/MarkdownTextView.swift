@@ -7,14 +7,16 @@ struct MarkdownTextView: View {
     var onWikiLinkTap: ((String) -> Void)?
 
     var body: some View {
-        Text(ObsidianMarkdown.attributedString(from: content, wikiLinksEnabled: onWikiLinkTap != nil))
-            .font(.system(size: fontSize, design: .monospaced))
-            .foregroundStyle(isError ? Color.red.opacity(0.85) : .primary)
-            .textSelection(.enabled)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .environment(\.openURL, OpenURLAction { url in
-                handleURL(url)
-            })
+        MarkdownBodyView(
+            content: content,
+            fontSizePx: Int(fontSize),
+            wikiLinksEnabled: onWikiLinkTap != nil,
+            isError: isError
+        )
+        .textSelection(.enabled)
+        .environment(\.openURL, OpenURLAction { url in
+            handleURL(url)
+        })
     }
 
     private func handleURL(_ url: URL) -> OpenURLAction.Result {

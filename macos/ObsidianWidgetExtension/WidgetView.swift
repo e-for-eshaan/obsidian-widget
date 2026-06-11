@@ -10,19 +10,15 @@ struct ObsidianWidgetView: View {
         entry.state.fontSizePx
     }
 
-    private var bulletLimit: Int {
+    private var lineLimit: Int? {
         switch family {
         case .systemSmall:
-            return 1
+            return 4
         case .systemMedium:
-            return 3
+            return 8
         default:
-            return 5
+            return 12
         }
-    }
-
-    private var bullets: [String] {
-        SharedStateReader.parseBullets(from: entry.state.summary, limit: bulletLimit)
     }
 
     var body: some View {
@@ -32,28 +28,11 @@ struct ObsidianWidgetView: View {
                 .lineLimit(family == .systemSmall ? 2 : 3)
                 .foregroundStyle(.primary)
 
-            if entry.state.status == .loading {
-                ProgressView()
-                    .controlSize(.small)
-                WidgetMarkdownText(entry.state.summary, fontSizePx: fontSizePx, lineLimit: 2)
-            } else if bullets.isEmpty {
-                WidgetMarkdownText(
-                    entry.state.summary,
-                    fontSizePx: fontSizePx,
-                    lineLimit: family == .systemSmall ? 3 : 6
-                )
-            } else {
-                VStack(alignment: .leading, spacing: 4) {
-                    ForEach(Array(bullets.enumerated()), id: \.offset) { _, bullet in
-                        HStack(alignment: .top, spacing: 6) {
-                            Text("•")
-                                .font(WidgetFont.body(fontSizePx - 2))
-                                .foregroundStyle(Color(red: 0.49, green: 0.45, blue: 1.0))
-                            WidgetMarkdownText(bullet, fontSizePx: fontSizePx)
-                        }
-                    }
-                }
-            }
+            WidgetMarkdownText(
+                entry.state.summary,
+                fontSizePx: fontSizePx,
+                lineLimit: lineLimit
+            )
 
             Spacer(minLength: 0)
 
