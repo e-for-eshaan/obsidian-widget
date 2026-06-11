@@ -91,6 +91,10 @@ struct SettingsView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
+            Text("Claude calls today: \(ClaudeUsageLimiter.callsUsedToday)/\(ClaudeUsageLimiter.maxDailyCalls)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
             HStack {
                 Button("Refresh", action: onRefreshNow)
                     .buttonStyle(.borderedProminent)

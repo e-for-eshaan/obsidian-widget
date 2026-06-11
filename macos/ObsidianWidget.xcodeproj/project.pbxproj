@@ -34,6 +34,7 @@
 		AA000010000000000000000F /* WidgetReload in Copy WidgetReload */ = {isa = PBXBuildFile; fileRef = AA0002030000000000000001 /* WidgetReload */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		AA0000100000000000000011 /* VaultAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001250000000000000001 /* VaultAccess.swift */; };
 		AA0000100000000000000012 /* ClaudeBinaryResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001260000000000000001 /* ClaudeBinaryResolver.swift */; };
+		AA0000100000000000000017 /* ClaudeUsageLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001290000000000000001 /* ClaudeUsageLimiter.swift */; };
 		AA0000100000000000000013 /* ObsidianMarkdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001270000000000000001 /* ObsidianMarkdown.swift */; };
 		AA0000100000000000000014 /* ObsidianMarkdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001270000000000000001 /* ObsidianMarkdown.swift */; };
 		AA0000100000000000000015 /* SyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001280000000000000001 /* SyntaxHighlighter.swift */; };
@@ -122,6 +123,7 @@
 		AA0001260000000000000001 /* ClaudeBinaryResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeBinaryResolver.swift; sourceTree = "<group>"; };
 		AA0001270000000000000001 /* ObsidianMarkdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObsidianMarkdown.swift; sourceTree = "<group>"; };
 		AA0001280000000000000001 /* SyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntaxHighlighter.swift; sourceTree = "<group>"; };
+		AA0001290000000000000001 /* ClaudeUsageLimiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeUsageLimiter.swift; sourceTree = "<group>"; };
 		AA0002010000000000000001 /* ObsidianWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ObsidianWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA0002020000000000000001 /* ObsidianWidgetHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObsidianWidgetHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA0002030000000000000001 /* WidgetReload */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WidgetReload; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,6 +178,7 @@
 				AA0001120000000000000001 /* ConfigStore.swift */,
 				AA0001250000000000000001 /* VaultAccess.swift */,
 				AA0001260000000000000001 /* ClaudeBinaryResolver.swift */,
+				AA0001290000000000000001 /* ClaudeUsageLimiter.swift */,
 				AA0001130000000000000001 /* VaultScanner.swift */,
 				AA0001140000000000000001 /* RelatedNotesResolver.swift */,
 				AA0001150000000000000001 /* SummaryFormat.swift */,
@@ -438,6 +441,7 @@
 				AA000010000000000000000E /* SettingsView.swift in Sources */,
 				AA0000100000000000000011 /* VaultAccess.swift in Sources */,
 				AA0000100000000000000012 /* ClaudeBinaryResolver.swift in Sources */,
+				AA0000100000000000000017 /* ClaudeUsageLimiter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -271,6 +271,13 @@ enum SummaryService {
     }
 
     private static func runClaude(config: AppConfig, prompt: String) async throws -> String {
+        guard ClaudeUsageLimiter.canMakeCall() else {
+            throw SummaryServiceError.dailyLimitReached(
+                remaining: ClaudeUsageLimiter.remainingCallsToday,
+                limit: ClaudeUsageLimiter.maxDailyCalls
+            )
+        }
+
         guard let executableURL = ClaudeBinaryResolver.resolve(configuredBinary: config.claudeBinary) else {
             throw SummaryServiceError.cliFailed(
                 "Claude CLI not found. Install it or set claudeBinary in config.json to its full path (e.g. /opt/homebrew/bin/claude)."
@@ -335,6 +342,7 @@ enum SummaryService {
 
             do {
                 try process.run()
+                ClaudeUsageLimiter.recordCall()
                 if let promptData = prompt.data(using: .utf8) {
                     stdinPipe.fileHandleForWriting.write(promptData)
                 }
@@ -350,6 +358,7 @@ enum SummaryService {
 enum SummaryServiceError: LocalizedError {
     case timedOut
     case cliFailed(String)
+    case dailyLimitReached(remaining: Int, limit: Int)
 
     var errorDescription: String? {
         switch self {
@@ -357,6 +366,8 @@ enum SummaryServiceError: LocalizedError {
             return "Claude CLI timed out after 120 seconds"
         case .cliFailed(let message):
             return message
+        case .dailyLimitReached(_, let limit):
+            return "Daily Claude limit reached (\(limit) calls). Cached summaries still work. Resets at midnight."
         }
     }
 }

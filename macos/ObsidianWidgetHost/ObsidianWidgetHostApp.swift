@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 @main
 struct ObsidianWidgetHostApp: App {
@@ -29,6 +30,12 @@ struct ObsidianWidgetHostApp: App {
         .defaultSize(width: 560, height: 640)
         .commands {
             CommandGroup(replacing: .newItem) {}
+            CommandGroup(replacing: .appTermination) {
+                Button("Quit Obsidian Widget") {
+                    NSApplication.shared.terminate(nil)
+                }
+                .keyboardShortcut("q", modifiers: .command)
+            }
         }
     }
 }
