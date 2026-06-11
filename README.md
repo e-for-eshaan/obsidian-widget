@@ -1,8 +1,20 @@
 # Obsidian Widget
 
-A macOS desktop widget that surfaces random notes from your Obsidian vault as short AI summaries. It sits on the left edge of your screen, always on top, and rotates through your notes on a schedule—so old ideas resurface without opening Obsidian.
+A macOS menu bar app that surfaces random notes from your Obsidian vault as short AI summaries on a native **WidgetKit desktop widget**. An Electron controller handles vault scanning, Claude summarization, and a full note viewer; a SwiftUI widget extension reads shared state via App Groups.
 
-**Random note → Claude summary → glanceable widget on your desktop.**
+**Random note → Claude summary → native desktop widget.**
+
+---
+
+## Architecture
+
+```text
+Electron (menu bar)          App Group container           WidgetKit extension
+───────────────────          ───────────────────           ───────────────────
+Vault scan / Claude CLI  →   widget-state.json        →   SwiftUI widget
+Scheduler / tray menu        group.com.obsidianwidget    Title + bullet summary
+Note viewer window           .shared                     Tap → open in Obsidian
+```
 
 ---
 
@@ -10,9 +22,9 @@ A macOS desktop widget that surfaces random notes from your Obsidian vault as sh
 
 - Picks a random markdown note from your vault every few hours
 - Generates a bullet-point summary using the **Claude CLI**
-- Shows the full original note when you want to read more
-- Lets you follow **wiki links** and **related notes** inside the widget
-- Opens the current note in **Obsidian** with one click
+- Shows the summary on a **native macOS desktop widget**
+- Opens a full **Note Viewer** window from the menu bar for original text, wiki links, and settings
+- Opens the current note in **Obsidian** from the widget tap or viewer
 - Caches summaries so unchanged notes are not re-summarized
 
 ---
@@ -21,10 +33,11 @@ A macOS desktop widget that surfaces random notes from your Obsidian vault as sh
 
 | Requirement | Details |
 |-------------|---------|
-| **macOS** | Primary target (Electron app) |
+| **macOS 14+** | Desktop widgets (Sonoma or later) |
+| **Xcode 15+** | Required to build the native WidgetKit extension (App Store install; Command Line Tools alone are not enough) |
 | **Obsidian vault** | A local folder of `.md` files (iCloud vault paths work) |
 | **Claude CLI** | Installed and logged in — `claude` must work on your PATH |
-| **Node.js 18+** | Only needed if building from source |
+| **Node.js 18+** | For building the Electron app from source |
 
 Verify Claude CLI:
 
@@ -36,7 +49,7 @@ claude -p "hello"
 
 ## Install & run
 
-### From source
+### From source (Electron only)
 
 ```bash
 git clone https://github.com/e-for-eshaan/obsidian-widget.git
@@ -45,41 +58,78 @@ npm install
 npm run dev
 ```
 
-Production build:
+The menu bar app runs in the background. Use **Open Note Viewer…** from the tray for the full UI.
+
+### Full build (Electron + native widget)
+
+Requires **full Xcode** from the Mac App Store (not just Command Line Tools):
 
 ```bash
-npm run build
-npm run start
+# One-time Xcode setup
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+sudo xcodebuild -license accept
+xcodebuild -runFirstLaunch          # installs CoreSimulator and other components
+
+# Signing (required for App Groups)
+open macos/ObsidianWidget.xcodeproj # set Team on all 3 targets in Signing & Capabilities
+
+npm install
+npm run build:all
+# or with team ID:
+# DEVELOPMENT_TEAM=YOUR_TEAM_ID npm run build:all
+```
+
+Or step by step:
+
+```bash
+npm run build                 # Electron app
+npm run build:macos-widget      # WidgetKit extension + WidgetReload helper
+npm run embed:widget            # Copy .appex into Electron .app bundle
 ```
 
 On first launch, choose your Obsidian vault folder in **Settings** (gear icon) or from the menu bar tray.
 
+### Add the desktop widget
+
+1. Open **System Settings → Desktop & Dock → Widgets** (or right-click the desktop → **Edit Widgets**)
+2. Find **Obsidian Note** and add it to your desktop
+3. The widget updates when the menu bar app picks or summarizes a note
+
+Tap the widget to open the current note in Obsidian.
+
 ---
 
-## Using the widget
+## Using the app
 
-### Main controls
+### Native desktop widget
+
+| Action | What it does |
+|--------|--------------|
+| **Glance** | Shows note title + bullet summary |
+| **Tap** | Opens the current note in Obsidian |
+
+### Note Viewer (menu bar → Open Note Viewer…)
 
 | Control | What it does |
 |---------|--------------|
 | **Summary / Original tabs** | Switch between AI summary and full note |
 | **↻ Refresh** | Pick a new random note immediately |
 | **◇ Open in Obsidian** | Open the current note in Obsidian |
-| **⚙ Settings** | Vault, subfolders, layout, font size, refresh actions |
+| **⚙ Settings** | Vault, subfolders, font size, refresh actions |
 
 ### Menu bar tray
 
 Right-click the tray icon for:
 
+- Open Note Viewer…
 - Choose vault folder
-- Square / rectangle layout
 - Refresh now / force refresh
 - Open current note
 - Quit
 
-### Exploring notes
+### Exploring notes (Note Viewer)
 
-- **Related notes** — pills under the summary; click to load that note in the widget
+- **Related notes** — pills under the summary; click to load that note
 - **Wiki links** — `[[Note Title]]` links in the original view are clickable
 - **Back button** — appears when you navigate via links or related notes; right-click for “Back to top”
 
@@ -87,7 +137,6 @@ Right-click the tray icon for:
 
 - **Vault folder** — which Obsidian vault to read from
 - **Subfolders** — limit random picks to specific folders (empty = all)
-- **Layout** — square (460px) or rectangle (640px) height
 - **Font size** — 9–16px for note text
 - **Refresh now** — re-run pick logic on schedule rules
 - **Regenerate summary** — re-summarize the current note (bypasses cache)
@@ -101,6 +150,7 @@ Right-click the tray icon for:
 3. Otherwise it sends the title and body (up to ~12k characters) to **Claude CLI** in headless mode.
 4. Claude returns a JSON response with a short bullet summary and suggested related note titles.
 5. Summaries are stored in `~/Library/Application Support/obsidian-widget/.cache/summaries/`.
+6. The current note state is written to the App Group at `~/Library/Group Containers/group.com.obsidianwidget.shared/widget-state.json` and the widget timeline is reloaded.
 
 Summaries only run when needed—editing a note invalidates its cache for that file.
 
@@ -110,7 +160,7 @@ Summaries only run when needed—editing a note invalidates its cache for that f
 
 Settings changed in the UI are saved automatically to:
 
-```
+```text
 ~/Library/Application Support/obsidian-widget/config.json
 ```
 
@@ -120,15 +170,28 @@ Advanced options (edit manually while the app is quit):
 |-----|---------|-------------|
 | `refreshIntervalHours` | `4` | Hours between automatic note picks |
 | `claudeBinary` | `"claude"` | Path to Claude CLI if not on PATH |
-| `leftPadding` | `16` | Distance from left screen edge (px) |
 
 See `config.example.json` for a full example.
 
 ---
 
-## Markdown support
+## App Group & signing
 
-The widget renders Obsidian-style markdown:
+Both the Electron app and WidgetKit extension use App Group **`group.com.obsidianwidget.shared`**.
+
+For local development, the Electron app writes directly to the group container path. For distribution:
+
+1. Register the App Group in the Apple Developer portal
+2. Sign the Electron app with [`macos/ObsidianWidget.entitlements`](macos/ObsidianWidget.entitlements)
+3. Sign the embedded widget extension (built from [`macos/ObsidianWidget.xcodeproj`](macos/ObsidianWidget.xcodeproj))
+
+The Xcode project also includes a minimal **ObsidianWidgetHost** app for developing the widget extension standalone.
+
+---
+
+## Markdown support (Note Viewer)
+
+The viewer renders Obsidian-style markdown:
 
 - **GFM** — headings, lists, tables, task lists, blockquotes
 - **`#tags`** — purple pills
@@ -142,7 +205,7 @@ The widget renders Obsidian-style markdown:
 
 - Your vault is read **locally** on your Mac.
 - Note content is sent to **Anthropic via your Claude CLI session** only when a summary is generated (cache miss).
-- The widget does not store API keys or make its own network requests.
+- The app does not store API keys or make its own network requests.
 - You need an active Claude CLI / Anthropic account for summarization.
 
 ---
@@ -150,31 +213,31 @@ The widget renders Obsidian-style markdown:
 ## Development
 
 ```bash
-npm run dev      # Hot reload
-npm run build    # Production build
-npm run start    # Run built app
-npm run lint     # ESLint
+npm run dev              # Electron hot reload (menu bar + note viewer)
+npm run build            # Production Electron build
+npm run build:macos-widget   # Xcode: widget extension + reload helper
+npm run embed:widget     # Embed .appex into Electron .app
+npm run build:all        # Full pipeline
+npm run lint             # ESLint
 ```
 
-Stack: Electron, React, TypeScript, react-markdown, Claude CLI.
+Stack: Electron, React, TypeScript, SwiftUI WidgetKit, App Groups, Claude CLI.
+
+Native sources live under [`macos/`](macos/).
 
 ---
 
 ## Limitations
 
-- **macOS only** for now
+- **macOS 14+ only** (desktop widgets)
+- Requires **Xcode** to build the native widget extension
 - Requires **Claude CLI** (no built-in API key UI)
-- **Read-only** — notes cannot be edited in the widget
+- **Read-only** — notes cannot be edited in the app
 - Refresh interval is config-file only (not in settings UI yet)
+- Widget shows summary only; full navigation lives in the Note Viewer
 
 ---
 
 ## License
 
 No license specified yet. Use and modify at your own discretion until one is added.
-
----
-
-## Related
-
-- Full product spec: [PRD.md](./PRD.md)

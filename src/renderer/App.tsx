@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState, type MouseEvent } from 'react';
-import type { AspectRatio, ContentView, NotePayload, WidgetSettings } from '../shared/types';
+import { useCallback, useEffect, useState, type MouseEvent } from 'react';
+import type { ContentView, NotePayload, WidgetSettings } from '../shared/types';
 import { SettingsPanel, SettingsTrigger } from './SettingsPanel';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { NoteSummaryMeta } from './NoteSummaryMeta';
@@ -23,7 +23,6 @@ const EMPTY_SETTINGS: WidgetSettings = {
   vaultFolderPath: '',
   includedSubfolders: [],
   refreshIntervalHours: 4,
-  aspectRatio: 'rectangle',
   contentView: 'summary',
   fontSizePx: 11,
   availableSubfolders: [],
@@ -33,7 +32,6 @@ export const App = () => {
   const [note, setNote] = useState<NotePayload>(EMPTY_NOTE);
   const [settings, setSettings] = useState<WidgetSettings>(EMPTY_SETTINGS);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [isRectangle, setIsRectangle] = useState(() => window.innerHeight > 500);
   const {
     canGoBack,
     navigateToRelated,
@@ -76,17 +74,6 @@ export const App = () => {
     setSettingsOpen(false);
   }, [note.filePath]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsRectangle(window.innerHeight > 500);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
   const handleChooseFolder = useCallback(() => {
     clearHistory();
     void window.widgetApi.chooseFolder().then((nextSettings) => {
@@ -107,12 +94,6 @@ export const App = () => {
     },
     [settings.includedSubfolders],
   );
-
-  const handleAspectRatioChange = useCallback((aspectRatio: AspectRatio) => {
-    void window.widgetApi.updateSettings({ aspectRatio }).then((nextSettings) => {
-      setSettings(nextSettings);
-    });
-  }, []);
 
   const handleFontSizeChange = useCallback((fontSizePx: number) => {
     void window.widgetApi.updateSettings({ fontSizePx }).then((nextSettings) => {
@@ -186,11 +167,6 @@ export const App = () => {
     setSettingsOpen(false);
   }, []);
 
-  const cardClassName = useMemo(
-    () => `${styles.card} ${isRectangle ? styles.cardRectangle : styles.cardSquare}`,
-    [isRectangle],
-  );
-
   const isLoading = note.status === 'loading';
   const hasOriginal = Boolean(note.content);
   const showOriginal = settings.contentView === 'original' && hasOriginal;
@@ -198,7 +174,7 @@ export const App = () => {
 
   return (
     <div className={styles.root}>
-      <article className={cardClassName}>
+      <article className={styles.card}>
         <div className={styles.toolbar}>
           <ForceRefreshButton
             onClick={handleForceRefresh}
@@ -239,7 +215,6 @@ export const App = () => {
                 onClose={handleCloseSettings}
                 onChooseFolder={handleChooseFolder}
                 onToggleSubfolder={handleToggleSubfolder}
-                onAspectRatioChange={handleAspectRatioChange}
                 onFontSizeChange={handleFontSizeChange}
                 onRefreshNow={handleRefreshNow}
                 onRegenerateSummary={handleRegenerateSummary}

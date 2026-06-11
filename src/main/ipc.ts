@@ -4,27 +4,22 @@ import type { SettingsUpdate } from '../shared/types';
 import {
   getWidgetSettings,
   loadConfig,
-  setAspectRatio,
   setVaultFolder,
   updateConfig,
 } from './config';
 import { listMarkdownFiles } from './obsidianScanner';
 import { resolveWikiLinkTarget } from './relatedNotes';
 import type { RefreshScheduler } from './scheduler';
-import type { WidgetWindow } from './widgetWindow';
+import type { DetailWindow } from './detailWindow';
 
 type SettingsListener = () => void;
 
-export async function showVaultFolderPicker(widgetWindow: WidgetWindow): Promise<string | null> {
+export async function showVaultFolderPicker(detailWindow: DetailWindow): Promise<string | null> {
   const config = loadConfig();
-  const parentWindow = widgetWindow.getWindow();
+  const parentWindow = detailWindow.getWindow();
 
   app.focus({ steal: true });
-  if (parentWindow) {
-    parentWindow.setAlwaysOnTop(false);
-    parentWindow.show();
-    parentWindow.focus();
-  }
+  detailWindow.show();
 
   try {
     const result = await dialog.showOpenDialog(parentWindow ?? undefined, {
@@ -38,25 +33,23 @@ export async function showVaultFolderPicker(widgetWindow: WidgetWindow): Promise
 
     return result.filePaths[0] ?? null;
   } finally {
-    if (parentWindow) {
-      parentWindow.setAlwaysOnTop(true, 'floating');
-    }
+    // no-op
   }
 }
 
-export function broadcastSettings(widgetWindow: WidgetWindow): void {
+export function broadcastSettings(detailWindow: DetailWindow): void {
   const settings = getWidgetSettings(loadConfig());
-  const window = widgetWindow.getWindow();
+  const window = detailWindow.getWindow();
   window?.webContents.send(IPC_CHANNELS.SETTINGS_UPDATED, settings);
 }
 
 export function registerIpcHandlers(
   scheduler: RefreshScheduler,
-  widgetWindow: WidgetWindow,
+  detailWindow: DetailWindow,
   onSettingsChanged: SettingsListener,
 ): void {
   const notifySettingsChanged = () => {
-    broadcastSettings(widgetWindow);
+    broadcastSettings(detailWindow);
     onSettingsChanged();
   };
 
@@ -70,14 +63,13 @@ export function registerIpcHandlers(
   });
 
   ipcMain.handle(IPC_CHANNELS.CHOOSE_FOLDER, async () => {
-    const selectedPath = await showVaultFolderPicker(widgetWindow);
+    const selectedPath = await showVaultFolderPicker(detailWindow);
 
     if (!selectedPath) {
       return getWidgetSettings(loadConfig());
     }
 
     setVaultFolder(selectedPath);
-    widgetWindow.applyConfig(loadConfig());
     notifySettingsChanged();
     await scheduler.refreshNow();
     return getWidgetSettings(loadConfig());
@@ -90,10 +82,6 @@ export function registerIpcHandlers(
       lastPickAt: update.includedSubfolders !== undefined ? null : current.lastPickAt,
       currentFilePath: update.includedSubfolders !== undefined ? null : current.currentFilePath,
     });
-
-    if (update.aspectRatio && update.aspectRatio !== current.aspectRatio) {
-      widgetWindow.applyConfig(next);
-    }
 
     notifySettingsChanged();
 
@@ -158,16 +146,7 @@ export function registerIpcHandlers(
   });
 
   scheduler.subscribe((note) => {
-    const window = widgetWindow.getWindow();
+    const window = detailWindow.getWindow();
     window?.webContents.send(IPC_CHANNELS.NOTE_UPDATED, note);
   });
-}
-
-export function applyAspectRatioFromTray(
-  aspectRatio: Parameters<typeof setAspectRatio>[0],
-  widgetWindow: WidgetWindow,
-): void {
-  setAspectRatio(aspectRatio);
-  widgetWindow.applyConfig(loadConfig());
-  broadcastSettings(widgetWindow);
 }

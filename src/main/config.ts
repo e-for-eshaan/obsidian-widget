@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { app } from 'electron';
-import type { AppConfig, AspectRatio, ContentView, WidgetSettings } from '../shared/types';
+import type { AppConfig, ContentView, WidgetSettings } from '../shared/types';
 import {
   DEFAULT_FONT_SIZE_PX,
   DEFAULT_VAULT_PATH,
@@ -15,10 +15,8 @@ const DEFAULT_CONFIG: AppConfig = {
   vaultFolderPath: DEFAULT_VAULT_PATH,
   includedSubfolders: [],
   refreshIntervalHours: 4,
-  aspectRatio: 'rectangle',
   contentView: 'summary',
   fontSizePx: DEFAULT_FONT_SIZE_PX,
-  leftPadding: 16,
   claudeBinary: 'claude',
   summaryCacheDir: '.cache/summaries',
   lastPickAt: null,
@@ -103,10 +101,6 @@ export function updateConfig(partial: Partial<AppConfig>): AppConfig {
   return next;
 }
 
-export function setAspectRatio(aspectRatio: AspectRatio): AppConfig {
-  return updateConfig({ aspectRatio });
-}
-
 export function setVaultFolder(vaultFolderPath: string): AppConfig {
   return updateConfig({
     vaultFolderPath,
@@ -138,7 +132,6 @@ export function getWidgetSettings(config: AppConfig): WidgetSettings {
     vaultFolderPath: config.vaultFolderPath,
     includedSubfolders: config.includedSubfolders,
     refreshIntervalHours: config.refreshIntervalHours,
-    aspectRatio: config.aspectRatio,
     contentView: config.contentView,
     fontSizePx: config.fontSizePx,
     availableSubfolders,

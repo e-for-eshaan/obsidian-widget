@@ -9,6 +9,7 @@ import {
 } from './obsidianScanner';
 import { resolveRelatedNoteTitles } from './relatedNotes';
 import { summarizeNote } from './summaryService';
+import { syncWidgetStateFromNote } from './widgetBridge';
 
 type NoteListener = (note: NotePayload) => void;
 
@@ -293,6 +294,7 @@ export class RefreshScheduler {
 
   private publish(note: NotePayload): void {
     this.currentNote = note;
+    syncWidgetStateFromNote(note);
     for (const listener of this.listeners) {
       listener(note);
     }

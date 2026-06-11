@@ -1,6 +1,7 @@
 node_modules/
 out/
 dist/
+macos/build/
 .cache/
 .cursor/
 config.json

@@ -1,11 +1,14 @@
 {
   "name": "obsidian-widget",
   "version": "1.0.0",
-  "description": "Left-side macOS desktop widget for random Obsidian note summaries",
+  "description": "macOS menu bar app with native WidgetKit desktop widget for random Obsidian note summaries",
   "main": "./out/main/index.js",
   "scripts": {
     "dev": "electron-vite dev",
     "build": "electron-vite build",
+    "build:macos-widget": "bash scripts/build-macos-widget.sh",
+    "embed:widget": "bash scripts/embed-widget.sh",
+    "build:all": "npm run build && npm run build:macos-widget && npm run embed:widget",
     "start": "electron-vite preview",
     "lint": "eslint . --quiet"
   },

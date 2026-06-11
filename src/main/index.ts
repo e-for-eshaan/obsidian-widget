@@ -5,14 +5,13 @@ import {
   shell,
   Tray,
 } from 'electron';
-import type { AspectRatio } from '../shared/types';
 import { loadConfig, setVaultFolder } from './config';
-import { applyAspectRatioFromTray, broadcastSettings, registerIpcHandlers, showVaultFolderPicker } from './ipc';
+import { DetailWindow } from './detailWindow';
+import { broadcastSettings, registerIpcHandlers, showVaultFolderPicker } from './ipc';
 import { RefreshScheduler } from './scheduler';
-import { WidgetWindow } from './widgetWindow';
 
 let tray: Tray | null = null;
-const widgetWindow = new WidgetWindow();
+const detailWindow = new DetailWindow();
 const scheduler = new RefreshScheduler();
 
 function buildTrayIcon(): Electron.NativeImage {
@@ -33,43 +32,28 @@ function buildTrayMenu(): Menu {
 
   return Menu.buildFromTemplate([
     {
+      label: 'Open Note Viewer…',
+      click: () => {
+        detailWindow.show();
+      },
+    },
+    { type: 'separator' },
+    {
       label: 'Choose Obsidian Folder…',
       click: async () => {
-        const selectedPath = await showVaultFolderPicker(widgetWindow);
+        const selectedPath = await showVaultFolderPicker(detailWindow);
 
         if (!selectedPath) {
           return;
         }
 
-        const nextConfig = setVaultFolder(selectedPath);
-        widgetWindow.applyConfig(nextConfig);
-        broadcastSettings(widgetWindow);
+        setVaultFolder(selectedPath);
+        broadcastSettings(detailWindow);
         await scheduler.refreshNow();
         rebuildTray();
       },
     },
     { type: 'separator' },
-    {
-      label: 'Aspect Ratio',
-      submenu: [
-        {
-          label: 'Square',
-          type: 'radio',
-          checked: config.aspectRatio === 'square',
-          click: () => {
-            applyAspectRatio('square');
-          },
-        },
-        {
-          label: 'Rectangle',
-          type: 'radio',
-          checked: config.aspectRatio === 'rectangle',
-          click: () => {
-            applyAspectRatio('rectangle');
-          },
-        },
-      ],
-    },
     {
       label: 'Force Refresh',
       click: () => {
@@ -110,11 +94,6 @@ function rebuildTray(): void {
   tray.setContextMenu(buildTrayMenu());
 }
 
-function applyAspectRatio(aspectRatio: AspectRatio): void {
-  applyAspectRatioFromTray(aspectRatio, widgetWindow);
-  rebuildTray();
-}
-
 function createTray(): void {
   tray = new Tray(buildTrayIcon());
   tray.setToolTip('Obsidian Widget');
@@ -126,9 +105,8 @@ async function bootstrap(): Promise<void> {
     app.dock.hide();
   }
 
-  const config = loadConfig();
-  widgetWindow.create(config);
-  registerIpcHandlers(scheduler, widgetWindow, rebuildTray);
+  detailWindow.create();
+  registerIpcHandlers(scheduler, detailWindow, rebuildTray);
   createTray();
   await scheduler.start();
 }
@@ -145,6 +123,11 @@ app.on('window-all-closed', () => {
 
 app.on('before-quit', () => {
   scheduler.stop();
+  const window = detailWindow.getWindow();
+  if (window && !window.isDestroyed()) {
+    window.removeAllListeners('close');
+    window.destroy();
+  }
 });
 
 process.on('uncaughtException', (error) => {

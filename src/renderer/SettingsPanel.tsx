@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { AspectRatio, WidgetSettings } from '../shared/types';
+import type { WidgetSettings } from '../shared/types';
 import { MAX_FONT_SIZE_PX, MIN_FONT_SIZE_PX } from '../shared/types';
 import { buildFolderTree, type FolderTreeNode } from './folderTree';
 import styles from './SettingsPanel.module.css';
@@ -33,7 +33,6 @@ interface SettingsPanelProps {
   onClose: () => void;
   onChooseFolder: () => void;
   onToggleSubfolder: (folder: string) => void;
-  onAspectRatioChange: (aspectRatio: AspectRatio) => void;
   onFontSizeChange: (fontSizePx: number) => void;
   onRefreshNow: () => void;
   onRegenerateSummary: () => void;
@@ -45,7 +44,6 @@ export const SettingsPanel = ({
   onClose,
   onChooseFolder,
   onToggleSubfolder,
-  onAspectRatioChange,
   onFontSizeChange,
   onRefreshNow,
   onRegenerateSummary,
@@ -142,26 +140,6 @@ export const SettingsPanel = ({
             )}
           </div>
         ) : null}
-      </div>
-
-      <div className={styles.inlineRow}>
-        <span className={styles.rowLabel}>Layout</span>
-        <div className={styles.segmented}>
-          <button
-            type="button"
-            className={`${styles.segment} ${settings.aspectRatio === 'square' ? styles.segmentActive : ''}`}
-            onClick={() => onAspectRatioChange('square')}
-          >
-            Square
-          </button>
-          <button
-            type="button"
-            className={`${styles.segment} ${settings.aspectRatio === 'rectangle' ? styles.segmentActive : ''}`}
-            onClick={() => onAspectRatioChange('rectangle')}
-          >
-            Rectangle
-          </button>
-        </div>
       </div>
 
       <div className={styles.inlineRow}>

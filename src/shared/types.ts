@@ -1,5 +1,3 @@
-export type AspectRatio = 'square' | 'rectangle';
-
 export type ContentView = 'summary' | 'original';
 
 export type WidgetStatus = 'loading' | 'ready' | 'error' | 'needsSetup';
@@ -12,10 +10,8 @@ export interface AppConfig {
   vaultFolderPath: string;
   includedSubfolders: string[];
   refreshIntervalHours: number;
-  aspectRatio: AspectRatio;
   contentView: ContentView;
   fontSizePx: number;
-  leftPadding: number;
   claudeBinary: string;
   summaryCacheDir: string;
   lastPickAt: string | null;
@@ -26,7 +22,6 @@ export interface WidgetSettings {
   vaultFolderPath: string;
   includedSubfolders: string[];
   refreshIntervalHours: number;
-  aspectRatio: AspectRatio;
   contentView: ContentView;
   fontSizePx: number;
   availableSubfolders: string[];
@@ -50,18 +45,8 @@ export interface NotePayload {
   errorMessage?: string;
 }
 
-export interface WidgetDimensions {
-  width: number;
-  height: number;
-}
-
 export const DEFAULT_VAULT_PATH =
   '/Users/eshaanyadav/Library/Mobile Documents/iCloud~md~obsidian/Documents/Mind';
-
-export const WIDGET_SIZES: Record<AspectRatio, WidgetDimensions> = {
-  square: { width: 320, height: 460 },
-  rectangle: { width: 320, height: 640 },
-};
 
 export const IPC_CHANNELS = {
   GET_NOTE: 'widget:get-note',
@@ -81,8 +66,5 @@ export const IPC_CHANNELS = {
 } as const;
 
 export type SettingsUpdate = Partial<
-  Pick<
-    AppConfig,
-    'includedSubfolders' | 'refreshIntervalHours' | 'aspectRatio' | 'contentView' | 'fontSizePx'
-  >
+  Pick<AppConfig, 'includedSubfolders' | 'refreshIntervalHours' | 'contentView' | 'fontSizePx'>
 >;

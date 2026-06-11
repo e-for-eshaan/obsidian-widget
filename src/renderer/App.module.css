@@ -6,7 +6,7 @@
   display: flex;
   align-items: stretch;
   justify-content: stretch;
-  background: transparent;
+  background: #121214;
   -webkit-app-region: no-drag;
   user-select: none;
 }
@@ -14,26 +14,16 @@
 .card {
   position: relative;
   flex: 1;
-  margin: 8px;
+  margin: 0;
   padding: 14px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(24, 24, 28, 0.72);
-  backdrop-filter: blur(18px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+  border-radius: 0;
+  border: none;
+  background: #18181c;
   color: #f5f5f7;
   overflow: hidden;
-}
-
-.cardSquare {
-  justify-content: flex-start;
-}
-
-.cardRectangle {
-  justify-content: flex-start;
 }
 
 .noteSection {
