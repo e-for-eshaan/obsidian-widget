@@ -40,19 +40,6 @@ enum VaultAccess {
         endAccess()
         scopedURL = url
         isAccessingResource = url.startAccessingSecurityScopedResource()
-
-        // #region agent log
-        DebugSessionLog.write(
-            hypothesisId: "H-sandbox",
-            location: "VaultAccess.swift:storeBookmark",
-            message: "Stored vault bookmark",
-            data: [
-                "path": url.path,
-                "accessGranted": String(isAccessingResource),
-            ],
-            runId: "vault-fix"
-        )
-        // #endregion
     }
 
     static func hasStoredBookmark() -> Bool {

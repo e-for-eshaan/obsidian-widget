@@ -17,16 +17,6 @@ enum ClaudeBinaryResolver {
             }
         }
 
-        // #region agent log
-        DebugSessionLog.write(
-            hypothesisId: "H-claude-sandbox",
-            location: "ClaudeBinaryResolver.swift:resolve",
-            message: "Claude binary not resolved",
-            data: probeReport(for: binaryName),
-            runId: "claude-fix-2"
-        )
-        // #endregion
-
         return nil
     }
 
@@ -77,21 +67,6 @@ enum ClaudeBinaryResolver {
         }
 
         return nil
-    }
-
-    private static func probeReport(for binaryName: String) -> [String: String] {
-        let fileManager = FileManager.default
-        let probes = candidatePaths(for: binaryName).prefix(6).map { candidate -> String in
-            let resolved = URL(fileURLWithPath: candidate).resolvingSymlinksInPath().path
-            let exists = fileManager.fileExists(atPath: resolved)
-            let executable = fileManager.isExecutableFile(atPath: resolved)
-            let readable = fileManager.isReadableFile(atPath: resolved)
-            return "\(resolved)|exists:\(exists)|exec:\(executable)|read:\(readable)"
-        }
-        return [
-            "configuredBinary": binaryName,
-            "probes": probes.joined(separator: " ; "),
-        ]
     }
 
     private static func expandPath(_ inputPath: String) -> String {

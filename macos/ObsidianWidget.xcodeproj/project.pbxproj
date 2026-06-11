@@ -32,7 +32,6 @@
 		AA000010000000000000000D /* NoteViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00011D0000000000000001 /* NoteViewerView.swift */; };
 		AA000010000000000000000E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00011E0000000000000001 /* SettingsView.swift */; };
 		AA000010000000000000000F /* WidgetReload in Copy WidgetReload */ = {isa = PBXBuildFile; fileRef = AA0002030000000000000001 /* WidgetReload */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-        AA0000100000000000000010 /* DebugSessionLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001240000000000000001 /* DebugSessionLog.swift */; };
 		AA0000100000000000000011 /* VaultAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001250000000000000001 /* VaultAccess.swift */; };
 		AA0000100000000000000012 /* ClaudeBinaryResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001260000000000000001 /* ClaudeBinaryResolver.swift */; };
 /* End PBXBuildFile section */
@@ -137,7 +136,6 @@
 		AA0001210000000000000001 /* Models */ = {isa = PBXGroup; children = (AA0001100000000000000001 /* AppConfig.swift */, AA0001110000000000000001 /* NotePayload.swift */); path = Models; sourceTree = "<group>"; };
 		AA0001220000000000000001 /* Services */ = {isa = PBXGroup; children = (AA0001120000000000000001 /* ConfigStore.swift */, AA0001250000000000000001 /* VaultAccess.swift */, AA0001260000000000000001 /* ClaudeBinaryResolver.swift */, AA0001130000000000000001 /* VaultScanner.swift */, AA0001140000000000000001 /* RelatedNotesResolver.swift */, AA0001150000000000000001 /* SummaryFormat.swift */, AA0001160000000000000001 /* SummaryService.swift */, AA0001170000000000000001 /* WidgetStateWriter.swift */, AA0001180000000000000001 /* NoteScheduler.swift */); path = Services; sourceTree = "<group>"; };
 		AA0001230000000000000001 /* Views */ = {isa = PBXGroup; children = (AA0001190000000000000001 /* MarkdownTextView.swift */); path = Views; sourceTree = "<group>"; };
-		AA0001240000000000000001 /* DebugSessionLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugSessionLog.swift; sourceTree = "<group>"; };
 		AA0001250000000000000001 /* VaultAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultAccess.swift; sourceTree = "<group>"; };
 		AA0001260000000000000001 /* ClaudeBinaryResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeBinaryResolver.swift; sourceTree = "<group>"; };
 		AA0002010000000000000001 /* ObsidianWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ObsidianWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -185,7 +183,6 @@
 			isa = PBXGroup;
 			children = (
 				AA0001070000000000000001 /* AppGroup.swift */,
-				AA0001240000000000000001 /* DebugSessionLog.swift */,
 				AA0001210000000000000001 /* Models */,
 				AA0001220000000000000001 /* Services */,
 				AA0001230000000000000001 /* Views */,
@@ -389,7 +386,6 @@
 				AA000010000000000000000C /* NoteNavigation.swift in Sources */,
 				AA000010000000000000000D /* NoteViewerView.swift in Sources */,
 				AA000010000000000000000E /* SettingsView.swift in Sources */,
-				AA0000100000000000000010 /* DebugSessionLog.swift in Sources */,
 				AA0000100000000000000011 /* VaultAccess.swift in Sources */,
 				AA0000100000000000000012 /* ClaudeBinaryResolver.swift in Sources */,
 			);

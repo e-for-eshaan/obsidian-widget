@@ -102,16 +102,16 @@ struct MainWindowBridge: View {
             .frame(width: 0, height: 0)
             .onChange(of: appController.pendingMainWindowOpen) { _, pending in
                 guard pending else { return }
-                presentMainWindow(source: "pendingFlag")
+                presentMainWindow()
             }
             .onAppear {
                 if appController.pendingMainWindowOpen {
-                    presentMainWindow(source: "onAppear")
+                    presentMainWindow()
                 }
             }
     }
 
-    private func presentMainWindow(source: String) {
+    private func presentMainWindow() {
         appController.clearPendingMainWindowOpen()
 
         let noteWindows = NSApp.windows.filter { $0.title == "Obsidian Widget" }

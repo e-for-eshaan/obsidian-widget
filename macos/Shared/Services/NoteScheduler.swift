@@ -138,21 +138,6 @@ final class NoteScheduler: ObservableObject {
                 includedSubfolders: config.includedSubfolders
             )
 
-            // #region agent log
-            DebugSessionLog.write(
-                hypothesisId: "H-sandbox",
-                location: "NoteScheduler.swift:refresh",
-                message: "Vault scan complete",
-                data: [
-                    "vaultPath": vaultPath,
-                    "markdownCount": String(markdownFiles.count),
-                    "hasBookmark": String(VaultAccess.hasStoredBookmark()),
-                    "includedSubfolders": config.includedSubfolders.joined(separator: ","),
-                ],
-                runId: "vault-fix"
-            )
-            // #endregion
-
             let filePath: String?
 
             if shouldPickNew {

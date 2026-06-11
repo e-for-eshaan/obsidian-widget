@@ -214,16 +214,6 @@ enum SummaryService {
             )
         }
 
-        // #region agent log
-        DebugSessionLog.write(
-            hypothesisId: "H-claude",
-            location: "SummaryService.swift:runClaude",
-            message: "Resolved Claude binary",
-            data: ["path": executableURL.path],
-            runId: "claude-fix"
-        )
-        // #endregion
-
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
             let process = Process()
             process.executableURL = executableURL

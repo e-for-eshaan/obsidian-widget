@@ -35,19 +35,6 @@ struct NoteViewerView: View {
             noteSection
         }
         .frame(minWidth: 520, minHeight: 560)
-        .onAppear {
-            // #region agent log
-            DebugSessionLog.write(
-                hypothesisId: "H1-H3",
-                location: "NoteViewerView.swift:onAppear",
-                message: "NoteViewerView appeared",
-                data: [
-                    "bundlePath": Bundle.main.bundlePath,
-                    "executablePath": Bundle.main.executablePath ?? "nil",
-                ]
-            )
-            // #endregion
-        }
         .onChange(of: note.filePath) { _, newPath in
             appController.settingsOpen = false
             navigation.syncCurrentFilePath(newPath)
